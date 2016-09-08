@@ -28,7 +28,7 @@ var myApp = angular.module('starter', ['ionic', 'angularSoap', 'ngCordova'])
         // See https://gist.github.com/borissondagh/29d1ed19d0df6051c56f 
         if (window.cordova) {
             // App syntax
-            db = $cordovaSQLite.openDB("myapp.db");
+            db = $cordovaSQLite.openDB({name:"myapp.db", iosDatabaseLocation:'default'});
         } else {
             // Google Chrome Syntax
             // Database is stored by Chrome under C:\Users\Seb\AppData\Local\Google\Chrome\User Data\Default\databases\http_192.168.2.100_8100\1 - open with SqliteBrowser(Open DB, Show all files, pick the 1)
