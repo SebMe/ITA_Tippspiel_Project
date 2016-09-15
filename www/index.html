@@ -18,13 +18,11 @@
     <!-- your app's js, ORDER OF SCRIPTS MATTER! -->
     <script src="js/database/ng-cordova.min.js"></script>
 	<script src="cordova.js"></script>
-	<script src="js/angularSoap/soapclient.js"></script>
-	<script src="js/angularSoap/angular.soap.js"></script>
 	<script src="js/app.js"></script>
-	<script src="js/services/soapService.js"></script>
+	<script src="js/services/restService.js"></script>
 	<script src="js/services/dataService.js"></script>
 	<script src="js/services/databaseService.js"></script>
-	<script src="views/soapTestView/soapTestViewController.js"></script>
+	<script src="views/restTestView/restTestViewController.js"></script>
 	<script src="views/loginView/loginViewController.js"></script>
 	<script src="views/groupListView/groupListViewController.js"></script>
   </head>
@@ -61,6 +59,13 @@
 
         USEFUL Android Debugging
         http://developer.android.com/tools/debugging/ddms.html
+		
+		USEFUL Soap:
+		http://mcgivery.com/soap-web-services-angular-ionic/
+		https://www.tutorialspoint.com/wsdl/index.htm
+		
+		USEFUL Slim:
+		http://www.slimframework.com/docs/start/installation.html
         -->
   
   <body ng-app="starter">
@@ -69,8 +74,8 @@
             <ion-tab icon="ion-ios-home" ui-sref="state_loginViewDisplayed">
                  <ion-nav-view name="name_loginView"></ion-nav-view>
             </ion-tab>   
-			<ion-tab icon="ion-android-contact" ui-sref="state_soapTestViewDisplayed">
-                 <ion-nav-view name="name_soapTestView"></ion-nav-view>
+			<ion-tab icon="ion-android-contact" ui-sref="state_restTestViewDisplayed">
+                 <ion-nav-view name="name_restTestView"></ion-nav-view>
             </ion-tab>  
 			<!-- Wird in der Iconleiste nicht angezeigt wegen hidden=true, wenn Code entfernt wird lässt sich aber die View nicht mehr mit ui-sref aufrufen -->
 			<ion-tab icon="ion-android-contact" ui-sref="state_groupListViewDisplayed" hidden=true>

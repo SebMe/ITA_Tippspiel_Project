@@ -41,6 +41,11 @@ myApp.factory('databaseService', function($cordovaSQLite, $q){
 		return users;
 	});
     };
+	
+	this.update_table_versions = function(tableInfo){
+		var query = 'INSERT OR IGNORE INTO table_versions (ID, tablename, version) VALUES (?, ?, ?)';
+		$cordovaSQLite.execute(db, query, [tableInfo.id, tableInfo.tablename, tableInfo.version]);
+	}
 
 return this;
 });

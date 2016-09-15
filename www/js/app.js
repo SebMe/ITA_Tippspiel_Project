@@ -6,7 +6,7 @@
 
 var db = null;
 
-var myApp = angular.module('starter', ['ionic', 'angularSoap', 'ngCordova'])
+var myApp = angular.module('starter', ['ionic', 'ngCordova'])
 
 .run(function($ionicPlatform, $cordovaSQLite) {
   $ionicPlatform.ready(function() {
@@ -37,6 +37,7 @@ var myApp = angular.module('starter', ['ionic', 'angularSoap', 'ngCordova'])
     
         // Create the user_table in case this is the first time the app is ever started		
 		$cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS User_Table(ID INTEGER PRIMARY KEY AUTOINCREMENT, Username TEXT, Password TEXT, UNIQUE(Username))");       
+		$cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS table_versions(ID INTEGER PRIMARY KEY, tablename TEXT, version TIMESTAMP, UNIQUE(tablename))");       
   });
 });
 
@@ -51,11 +52,11 @@ myApp.config(function ($ionicConfigProvider) {
 myApp.config(function ($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/')
 
-    $stateProvider.state('state_soapTestViewDisplayed', {
-        url: '/soapTestView',
+    $stateProvider.state('state_restTestViewDisplayed', {
+        url: '/restTestView',
         views: {
-            name_soapTestView: {
-                templateUrl: 'views/soapTestView/soapTestView.html'
+            name_restTestView: {
+                templateUrl: 'views/restTestView/restTestView.html'
             }
         }
     });
