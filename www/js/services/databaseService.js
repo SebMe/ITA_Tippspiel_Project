@@ -18,34 +18,48 @@ myApp.factory('databaseService', function($cordovaSQLite, $q){
         return q.promise;
     };
 	
-	 this.updateUsertable = function (user) {
-        var insert_usertable_query = 'INSERT OR IGNORE INTO User_Table (Username, Password) VALUES (?, ?)';
-        $cordovaSQLite.execute(db, insert_usertable_query, [user.username, user.password]);
+	this.getTableVersions = function(tablename){
+		var query = 'SELECT version FROM table_versions where tablename = ?';
+		return this.executeQuery(query, [tablename]).then(function (result) {
+			var version = -1;
+			if (result.rows.length > 0) {
+				version = result.rows.item(0);
+			}
+			return version;
+		});
+	};
+	
+	this.updateTableVersion = function (tablename, version) {
+        var query = 'UPDATE table_versions SET version = ? WHERE tablename = ?';
+        $cordovaSQLite.execute(db, query, [version, tablename]);
     };
 	
-	this.getUsertable = function () {
-	var query = 'SELECT * from User_Table';
+	this.getBenutzer = function () {
+	var query = 'SELECT * from Benutzer';
 	var users = [];
 	return this.executeQuery(query, []).then(function (result) {
 		if (result.rows.length > 0) {
 			for (var i = 0; i < result.rows.length; i++) {
-				var user = {
+				var benutzer = {
+					id: null,
+					mailadresse: null,
 					username: null,
-					password: null
+					passwort: null,
+					punkte: null
 					};
-				user.username = result.rows.item(i).Username;
-				user.password = result.rows.item(i).Password;
-				users.push(user);
+				benutzer.username = result.rows.item(i).benutzer_username;
+				benutzer.passwort = result.rows.item(i).benutzer_passwort;
+				users.push(benutzer);
 			};                
 		};
 		return users;
 	});
     };
 	
-	this.update_table_versions = function(tableInfo){
-		var query = 'INSERT OR IGNORE INTO table_versions (ID, tablename, version) VALUES (?, ?, ?)';
-		$cordovaSQLite.execute(db, query, [tableInfo.id, tableInfo.tablename, tableInfo.version]);
-	}
+	this.updateBenutzer = function (benutzer) {
+        var query = 'INSERT OR IGNORE INTO Benutzer (benutzer_username, benutzer_passwort) VALUES (?, ?)';
+        $cordovaSQLite.execute(db, query, [benutzer.username, benutzer.passwort]);
+    };
 
 return this;
 });

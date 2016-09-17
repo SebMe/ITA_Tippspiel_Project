@@ -7,22 +7,21 @@ this.getOpenLigaMatches = function(){
 	return $http.get('http://www.openligadb.de/api/getmatchdata/em2016/2016/1');
 };
 
-this.getServerData = function(param){
-	return $http.get(serverURL+'/restController.php?'+param);
+this.getServerData = function(tablename){
+	databaseService.getTableVersion(tablename);
+	return $http.post(serverURL+'/restController.php', {tablename: table, version: values});
 };
 
-this.postDataToServer = function(param){
-	var fakeUsertableEntry = {
-		benutzer_id: 11,
-		benutzer_mailadresse: 'test@test.de',
-		benutzer_password: 'testpasswort',
-		benutzer_username: 'ionicgenerateduser',
-		benutzer_punkte: 0,
-		version: 0,
-		operation: 'INSERT'
-	}
-	
-	return $http.post(serverURL+'/restController.php', fakeUsertableEntry);
+// See http://angulartricks.com/how-to-do-http-post-with-angularjs-in-php/
+this.postDataToServer = function(table, values){	
+	return $http.post(serverURL+'/restController.php', {tablename: table, data: values});
+	/*
+	return $http({
+	url: serverURL+'/restController.php',
+		method: "POST",
+		//headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+		data: {test: 'hallo'}
+	});*/
 };
 
 return this;

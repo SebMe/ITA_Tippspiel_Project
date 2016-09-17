@@ -5,24 +5,22 @@ myApp.controller('restTestViewController', function ($scope, restService, databa
 			$scope.returnedData = response;
 		});
 	}
-	
-	$scope.getTableVersions = function(){
-		restService.getServerData('gettableversions').then(function(response){
-			$scope.returnedData = response;
-		});
-	}
 
-	$scope.testLocalTableVersionsUpdate = function(){
-		var tableinfo = {
-		id: 1,
-		tablename: 'test',
-		version: new Date()
-		};
-		databaseService.update_table_versions(tableinfo);
+	$scope.testSQL = function(){
+		databaseService.updateTableVersion('Benutzer', new Date());
 	}	
 	
 	$scope.postUsertable = function(){
-		restService.postDataToServer('postusertable').then(function(response){
+		var fakeBenutzerTableEntry = {
+		benutzer_id: 11,
+		benutzer_mailadresse: 'test@test.de',
+		benutzer_password: 'testpasswort',
+		benutzer_username: 'ionicgenerateduser',
+		benutzer_punkte: 0,
+		version: 0,
+		operation: 'INSERT'
+	}
+		restService.postDataToServer('benutzer', fakeBenutzerTableEntry).then(function(response){
 			$scope.returnedData = response;
 		});
 	}

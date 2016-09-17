@@ -1,15 +1,18 @@
 myApp.factory('dataService', function(){
-	var userModel = {
-		username: null,
-		password: null
-	};
+	var benutzer = {
+					id: null,
+					mailadresse: null,
+					username: null,
+					passwort: null,
+					punkte: null
+					};
 	
-this.getUser = function(){
-	return userModel;
+this.getBenutzer = function(){
+	return benutzer;
 };
 
-this.setUser = function(userModel){
-	this.userModel = userModel;
+this.setBenutzer = function(userModel){
+	this.benutzer = benutzer;
 };
 
 return this;

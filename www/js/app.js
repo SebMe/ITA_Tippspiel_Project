@@ -34,13 +34,11 @@ var myApp = angular.module('starter', ['ionic', 'ngCordova'])
             // Database is stored by Chrome under C:\Users\Seb\AppData\Local\Google\Chrome\User Data\Default\databases\http_192.168.2.100_8100\1 - open with SqliteBrowser(Open DB, Show all files, pick the 1)
             db = window.openDatabase("myapp.db", "1.0", "MyAppInfo", -1);
         }
-    
-        // Create the user_table in case this is the first time the app is ever started		
-		$cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS User_Table(ID INTEGER PRIMARY KEY AUTOINCREMENT, Username TEXT, Password TEXT, UNIQUE(Username))");       
+    	
 		$cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS table_versions(ID INTEGER PRIMARY KEY, tablename TEXT, version TIMESTAMP, UNIQUE(tablename))"); 
 		
 		 // Reihenfolge: Benutzer, Zeitzone, Mannschaft, Gruppe, Europameisterschaft, Gruppe_Enthaelt_Mannschaft, Europameisterschaft_beinhaltet_Mannschaft, Begegnung, Mannschaft_bestreitet_Begegnung, Tipprunde, Benutzer_spielt_Tipprunde, Tipp
-		$cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS Benutzer(benutzer_id INTEGER PRIMARY KEY AUTOINCREMENT, benutzer_mailadresse TEXT UNIQUE, benutzer_passwort TEXT, benutzer_username TEXT UNIQUE, benutzer_punkte INTEGER)");     
+		$cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS Benutzer(benutzer_id INTEGER PRIMARY KEY AUTOINCREMENT, benutzer_mailadresse TEXT UNIQUE, benutzer_passwort TEXT, benutzer_username TEXT UNIQUE, benutzer_punkte INTEGER, operation TEXT, status TEXT)");     
 		$cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS Zeitzone(zeitzone_id INTEGER PRIMARY KEY AUTOINCREMENT, zeitzone_name TEXT UNIQUE)");
 		$cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS Mannschaft(mannschaft_id INTEGER PRIMARY KEY AUTOINCREMENT, mannschaft_name TEXT UNIQUE, mannschaft_flagge BLOB)");
 		$cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS Gruppe(gruppe_id INTEGER PRIMARY KEY AUTOINCREMENT, gruppe_name TEXT, gruppe_orderID TEXT UNIQUE, gruppe_leagueshortcut TEXT UNIQUE)");
@@ -52,6 +50,12 @@ var myApp = angular.module('starter', ['ionic', 'ngCordova'])
 		$cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS Tipprunde(tipprunde_id INTEGER PRIMARY KEY AUTOINCREMENT, tipprunde_name TEXT UNIQUE, tipprunde_passwort TEXT, tipprunde_europameisterschaft_fid INTEGER NOT NULL, FOREIGN KEY(tipprunde_europameisterschaft_fid) REFERENCES Europameisterschaft(europameisterschaft_id))");
 		$cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS Benutzer_spielt_Tipprunde(benutzer_fid INTEGER NOT NULL, tipprunde_fid INTEGER NOT NULL, PRIMARY KEY(benutzer_fid, tipprunde_fid), FOREIGN KEY(benutzer_fid) REFERENCES Benutzer(benutzer_id), FOREIGN KEY(tipprunde_fid) REFERENCES Tipprunde(tipprunde_id))");
 		$cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS Tipp(begegnung_fid INTEGER NOT NULL, benutzer_fid INTEGER NOT NULL, tipprunde_fid INTEGER NOT NULL, tipp_tore_heimmannschaft INTEGER, tipp_tore_auswaertsmannschaft INTEGER, tipp_datum TEXT, PRIMARY KEY(begegnung_fid, benutzer_fid, tipprunde_fid), FOREIGN KEY(begegnung_fid) REFERENCES Begegnung(begegnung_id), FOREIGN KEY(benutzer_fid) REFERENCES Benutzer(benutzer_id), FOREIGN KEY(tipprunde_fid) REFERENCES Tipprunde(tipprunde_id))");
+		
+		// Init tables
+		$cordovaSQLite.execute(db, "INSERT OR IGNORE INTO table_versions (tablename, version) VALUES ('Benutzer', 0)");
+		$cordovaSQLite.execute(db, "INSERT OR IGNORE INTO table_versions (tablename, version) VALUES ('Tipprunde', 0)");
+		$cordovaSQLite.execute(db, "INSERT OR IGNORE INTO table_versions (tablename, version) VALUES ('Benutzer_spielt_Tipprunde', 0)");
+		$cordovaSQLite.execute(db, "INSERT OR IGNORE INTO table_versions (tablename, version) VALUES ('Tipp', 0)");
   });
 });
 
