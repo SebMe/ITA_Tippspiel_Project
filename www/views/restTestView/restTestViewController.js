@@ -7,7 +7,9 @@ myApp.controller('restTestViewController', function ($scope, restService, databa
 	}
 
 	$scope.testSQL = function(){
-		databaseService.updateTableVersion('Benutzer', new Date());
+		restService.getServerData('Benutzer').then(function(response){
+			$scope.returnedData = response;
+		});
 	}	
 	
 	$scope.postUsertable = function(){

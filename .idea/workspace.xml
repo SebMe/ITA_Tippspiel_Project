@@ -3,6 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="9e02a435-e5bb-4981-b680-910871866ce0" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/www/js/app.js" afterPath="$PROJECT_DIR$/www/js/app.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/www/js/services/dataService.js" afterPath="$PROJECT_DIR$/www/js/services/dataService.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/www/js/services/restService.js" afterPath="$PROJECT_DIR$/www/js/services/restService.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/www/views/groupListView/groupListView.html" afterPath="$PROJECT_DIR$/www/views/groupListView/groupListView.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/www/views/loginView/loginView.html" afterPath="$PROJECT_DIR$/www/views/loginView/loginView.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/www/views/loginView/loginViewController.js" afterPath="$PROJECT_DIR$/www/views/loginView/loginViewController.js" />
     </list>
     <ignored path="EMApp.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -27,7 +33,7 @@
         <entry file="file://$PROJECT_DIR$/www/js/app.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.43079922">
-              <caret line="14" column="25" selection-start-line="14" selection-start-column="25" selection-end-line="14" selection-end-column="25" />
+              <caret line="32" column="25" selection-start-line="32" selection-start-column="25" selection-end-line="32" selection-end-column="25" />
               <folding />
             </state>
           </provider>
@@ -185,7 +191,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="2" y="2" width="1278" height="726" extended-state="1" />
+    <frame x="2" y="2" width="1278" height="726" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -241,7 +247,7 @@
     <entry file="file://$PROJECT_DIR$/www/js/app.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.43079922">
-          <caret line="14" column="25" selection-start-line="14" selection-start-column="25" selection-end-line="14" selection-end-column="25" />
+          <caret line="32" column="25" selection-start-line="32" selection-start-column="25" selection-end-line="32" selection-end-column="25" />
           <folding />
         </state>
       </provider>

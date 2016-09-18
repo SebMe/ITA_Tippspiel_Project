@@ -1,10 +1,10 @@
 myApp.factory('dataService', function(){
 	var benutzer = {
-					id: null,
-					mailadresse: null,
-					username: null,
-					passwort: null,
-					punkte: null
+					benutzer_id: null,
+					benutzer_mailadresse: null,
+					benutzer_username: null,
+					benutzer_passwort: null,
+					benutzer_punkte: null
 					};
 	
 this.getBenutzer = function(){

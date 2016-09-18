@@ -23,13 +23,13 @@ myApp.factory('databaseService', function($cordovaSQLite, $q){
 		return this.executeQuery(query, [tablename]).then(function (result) {
 			var version = -1;
 			if (result.rows.length > 0) {
-				version = result.rows.item(0);
+				version = result.rows.item(0).version;
 			}
 			return version;
 		});
 	};
 	
-	this.updateTableVersion = function (tablename, version) {
+	this.updateTableVersions = function (tablename, version) {
         var query = 'UPDATE table_versions SET version = ? WHERE tablename = ?';
         $cordovaSQLite.execute(db, query, [version, tablename]);
     };
@@ -41,14 +41,13 @@ myApp.factory('databaseService', function($cordovaSQLite, $q){
 		if (result.rows.length > 0) {
 			for (var i = 0; i < result.rows.length; i++) {
 				var benutzer = {
-					id: null,
-					mailadresse: null,
-					username: null,
-					passwort: null,
-					punkte: null
+					benutzer_mailadresse: null,
+					benutzer_username: null,
+					benutzer_passwort: null,
+					benutzer_punkte: null
 					};
-				benutzer.username = result.rows.item(i).benutzer_username;
-				benutzer.passwort = result.rows.item(i).benutzer_passwort;
+				benutzer.benutzer_username = result.rows.item(i).benutzer_username;
+				benutzer.benutzer_passwort = result.rows.item(i).benutzer_passwort;
 				users.push(benutzer);
 			};                
 		};
@@ -57,8 +56,8 @@ myApp.factory('databaseService', function($cordovaSQLite, $q){
     };
 	
 	this.updateBenutzer = function (benutzer) {
-        var query = 'INSERT OR IGNORE INTO Benutzer (benutzer_username, benutzer_passwort) VALUES (?, ?)';
-        $cordovaSQLite.execute(db, query, [benutzer.username, benutzer.passwort]);
+        var query = 'INSERT OR IGNORE INTO Benutzer (benutzer_id, benutzer_username, benutzer_passwort) VALUES (?, ?, ?)';
+        return $cordovaSQLite.execute(db, query, [benutzer.benutzer_id, benutzer.benutzer_username, benutzer.benutzer_passwort]);
     };
 
 return this;
