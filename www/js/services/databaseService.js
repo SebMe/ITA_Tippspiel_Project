@@ -59,6 +59,27 @@ myApp.factory('databaseService', function($cordovaSQLite, $q){
         var query = 'INSERT OR IGNORE INTO Benutzer (benutzer_id, benutzer_username, benutzer_passwort) VALUES (?, ?, ?)';
         return $cordovaSQLite.execute(db, query, [benutzer.benutzer_id, benutzer.benutzer_username, benutzer.benutzer_passwort]);
     };
+	
+	this.insertDataIntoTable = function(tablename, data){
+		var columns = Object.keys(data);
+		var questionmarks = "";
+		var values = [];
+		
+		for(var key in data){
+			values.push(data[key])
+		};
+		
+		for (var i = 0; i<columns.length;i++){
+			if(i != columns.length-1){
+				questionmarks = questionmarks + '?,'
+			}else{
+				questionmarks = questionmarks + '?'
+			}
+		};
+		
+		var query = 'INSERT OR IGNORE INTO ' + tablename + ' (' + columns + ') VALUES (' + questionmarks + ')';
+		return $cordovaSQLite.execute(db, query, [values]);
+	};
 
 return this;
 });

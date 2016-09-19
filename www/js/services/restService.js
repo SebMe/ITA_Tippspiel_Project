@@ -7,15 +7,21 @@ this.getOpenLigaMatches = function(){
 	return $http.get('http://www.openligadb.de/api/getmatchdata/em2016/2016/1');
 };
 
-this.getServerData = function(table){
-	return databaseService.getTableVersions(table).then(function(response){
-			return $http.post(serverURL+'/restController.php', {tablename: table, version: response});
-	});
-};
-
 // See http://angulartricks.com/how-to-do-http-post-with-angularjs-in-php/
 this.postDataToServer = function(table, values){	
 	return $http.post(serverURL+'/restController.php', {tablename: table, data: values});
+};
+
+this.syncTableWithServer = function(table){
+	return databaseService.getTableVersions(table).then(function(response){
+			return $http.post(serverURL+'/restController.php', {tablename: table, version: response}).then(function(response){
+				for(var i=0;i<response.data.length;i++){
+					var oneTableRow = response.data[i];
+					delete oneTableRow["version"];
+					databaseService.insertDataIntoTable(table, oneTableRow);
+				}			
+			});
+	});
 };
 
 this.createUser = function(userdata){

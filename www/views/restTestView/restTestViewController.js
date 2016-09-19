@@ -7,7 +7,7 @@ myApp.controller('restTestViewController', function ($scope, restService, databa
 	}
 
 	$scope.testSQL = function(){
-		restService.getServerData('Benutzer').then(function(response){
+		restService.syncTableWithServer('Benutzer').then(function(response){
 			$scope.returnedData = response;
 		});
 	}	
