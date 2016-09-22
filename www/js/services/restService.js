@@ -1,4 +1,4 @@
-myApp.factory('restService', function($http, databaseService){
+myApp.factory('restService', function($http, databaseService, dataService){
 
 //var serverURL = 'http://192.168.2.102';
 var serverURL = 'http://127.0.0.1';
@@ -12,15 +12,28 @@ this.postDataToServer = function(table, values){
 	return $http.post(serverURL+'/restController.php', {tablename: table, data: values});
 };
 
+// This function will retrieve all data from server (for the given table) that the client not yet has, the new data is then inserted in the client db
 this.syncTableWithServer = function(table){
 	return databaseService.getTableVersions(table).then(function(response){
-			return $http.post(serverURL+'/restController.php', {tablename: table, version: response}).then(function(response){
-				for(var i=0;i<response.data.length;i++){
-					var oneTableRow = response.data[i];
-					delete oneTableRow["version"];
-					databaseService.insertDataIntoTable(table, oneTableRow);
-				}			
-			});
+		var benutzer = dataService.getBenutzer();
+		var loggedInbenutzer_id = benutzer.benutzer_id;
+		return $http.post(serverURL+'/restController.php', {tablename: table, version: response, benutzer_id: loggedInbenutzer_id}).then(function(response){
+			var newestDBEntryDate = -1;
+			var newestDBEntryAsString = "";
+			for(var i=0;i<response.data.length;i++){
+				var oneTableRow = response.data[i];
+				if(new Date(response.data[i]["version"]) > newestDBEntryDate){
+					newestDBEntryDate = new Date(response.data[i]["version"]);
+					newestDBEntryAsString = response.data[i]["version"];
+				};
+				delete oneTableRow["version"];
+				databaseService.insertDataIntoTable(table, oneTableRow);
+			};
+			// We received data, store the date of the newest entry as version, so the next sync with server will not receive the data we already have
+			if(newestDBEntryDate > 0){
+				databaseService.updateTableVersions(table, newestDBEntryAsString);
+			};
+		});
 	});
 };
 
@@ -41,27 +54,39 @@ this.createUser = function(userdata){
 	});
 };
 
-// Stub, server connection not yet implemented
 // Tipprunde will be created at the server, if successfull the Tipprunde is also created in the app db
-this.createTipprunde = function(tipprunde){
-	return databaseService.insertDataIntoTable('Tipprunde', tipprunde).then(function(response){
-		return 'Tipprunde was created.';
+this.createTipprunde = function(tipprundeData){
+	return $http.post(serverURL+'/restController.php', {createTipprunde:1, tipprunde: tipprundeData}).then(function(response){
+		if(response.data >= 0){
+			tipprundeData.tipprunde_id = response.data;
+			return databaseService.insertDataIntoTable('Tipprunde', tipprundeData).then(function(response){
+				return 'Tipprunde was created.';
+			});
+		}else{
+			return response.data;
+		}
 	});
 };
 
 // Tipp will be created in the app db. Use sendTippsToServer to try and send all offline created Tipps to the server
 this.createTipp = function(tipp){
 	tipp.status = 'not_committed';
-	delete tipp['tipp_datum']; // Datum is set by the database as CURRENT_TIMESTAMP
 	return databaseService.insertDataIntoTable('Tipp', tipp).then(function(response){
 		return 'Tipp was created.';
 	});
 };
 
-// Stub, server connection not yet implemented
 this.sendTippsToServer = function(){
-	return databaseService.setTippsCommitted().then(function(response){
-		return 'All offline created Tipps send to server.';
+	return databaseService.getAllTippsNotCommitted().then(function(notCommittedTipps){	
+		return $http.post(serverURL+'/restController.php', {createOrUpdateTipps:1, tipps: notCommittedTipps}).then(function(response){
+			if(response.data == notCommittedTipps.length){
+				return databaseService.setTippsCommitted().then(function(response){
+					return 'All offline created or changed Tipps send to server.';
+				});
+			}else{
+				return response.data;
+			}
+		});
 	});
 };
 

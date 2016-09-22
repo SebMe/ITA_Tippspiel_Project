@@ -10,7 +10,7 @@ myApp.factory('dataService', function(){
 		tipprunde_id: null,
 		tipprunde_name: null,
 		tipprunde_passwort: null,
-		tipprunde_europameisterschaft_fid: null
+		europameisterschaft_fid: null
 	};
 	
 	var tipp = {
@@ -19,15 +19,18 @@ myApp.factory('dataService', function(){
 		benutzer_fid: null,
 		tipp_tore_heimmannschaft: null,
 		tipp_tore_auswaertsmannschaft: null,
-		tipp_datum: null
+		status: null,
 	};
 	
 this.getBenutzer = function(){
 	return benutzer;
 };
 
-this.setBenutzer = function(userModel){
-	this.benutzer = benutzer;
+this.setBenutzer = function(benutzerNeu){
+	benutzer.benutzer_id = benutzerNeu.benutzer_id;
+	benutzer.benutzer_mailadresse = benutzerNeu.mailadresse;
+	benutzer.benutzer_username = benutzerNeu.benutzer_username;
+	benutzer.benutzer_passwort = benutzerNeu.benutzer_passwort;
 };
 
 return this;

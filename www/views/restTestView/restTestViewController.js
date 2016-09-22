@@ -1,17 +1,17 @@
-myApp.controller('restTestViewController', function ($scope, restService, databaseService) {
+myApp.controller('restTestViewController', function ($scope, restService, databaseService, dataService) {
 
 	$scope.testSQL = function(){
-		restService.syncTableWithServer('Benutzer').then(function(response){
+		restService.syncTableWithServer('Tipp').then(function(response){
 			$scope.returnedData = response;
 		});
 	}	
 	
 	$scope.testCreateTipprunde = function(){
 		var tipprunde = {
-			tipprunde_id: 1,
-			tipprunde_name: 'FHTipprunde',
+			tipprunde_id: null,
+			tipprunde_name: 'FHTipprunde5',
 			tipprunde_passwort: 'geheim',
-			tipprunde_europameisterschaft_fid: 1,		
+			europameisterschaft_fid: 1,		
 		};
 		
 		restService.createTipprunde(tipprunde).then(function(response){
@@ -20,14 +20,14 @@ myApp.controller('restTestViewController', function ($scope, restService, databa
 	};
 	
 	$scope.testCreateTipp = function(){
+		var loggedInBenutzerID = dataService.getBenutzer().benutzer_id;
 		var tipp = {
 			begegnung_fid: 1,
 			tipprunde_fid: 1,
-			benutzer_fid: 1,
+			benutzer_fid: loggedInBenutzerID,
 			tipp_tore_heimmannschaft: 3,
 			tipp_tore_auswaertsmannschaft: 4,
-			tipp_datum: null,
-			status: null
+			status: null,
 		};
 		
 		// Create a first tipp
@@ -43,6 +43,17 @@ myApp.controller('restTestViewController', function ($scope, restService, databa
 		
 		restService.sendTippsToServer().then(function(response){
 			$scope.returnedData = $scope.returnedData + response;
+		});
+	};
+	
+	$scope.testChangeTipp = function(){
+		var tipprunde_id = 1;
+		databaseService.getAllTippsForTipprunde(tipprunde_id).then(function(response){
+			var tipps = response;
+			tipps[0]["tipp_tore_auswaertsmannschaft"] = 777;
+			databaseService.changeTipp(tipps[0]).then(function(response){
+				$scope.returnedData = response;
+			});
 		});
 	};
 	

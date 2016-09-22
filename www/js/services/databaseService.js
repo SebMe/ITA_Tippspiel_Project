@@ -13,6 +13,7 @@ myApp.factory('databaseService', function($cordovaSQLite, $q){
             },
             // Query execute failed (negative promise)
             function (error) {
+				console.error(error);
                 q.reject(error);
             });
         return q.promise;
@@ -31,7 +32,12 @@ myApp.factory('databaseService', function($cordovaSQLite, $q){
 	
 	this.updateTableVersions = function (tablename, version) {
         var query = 'UPDATE table_versions SET version = ? WHERE tablename = ?';
-        $cordovaSQLite.execute(db, query, [version, tablename]);
+        $cordovaSQLite.execute(db, query, [version, tablename]).then(
+            function (result) {
+            },
+            function (error) {
+				console.error(error);
+            });
     };
 	
 	this.getBenutzer = function () {
@@ -41,11 +47,13 @@ myApp.factory('databaseService', function($cordovaSQLite, $q){
 			if (result.rows.length > 0) {
 				for (var i = 0; i < result.rows.length; i++) {
 					var benutzer = {
+						benutzer_id: null,
 						benutzer_mailadresse: null,
 						benutzer_username: null,
 						benutzer_passwort: null,
-						benutzer_punkte: null
 						};
+					benutzer.benutzer_id = result.rows.item(i).benutzer_id;
+					benutzer.benutzer_mailadresse = result.rows.item(i).benutzer_mailadresse;
 					benutzer.benutzer_username = result.rows.item(i).benutzer_username;
 					benutzer.benutzer_passwort = result.rows.item(i).benutzer_passwort;
 					users.push(benutzer);
@@ -57,8 +65,38 @@ myApp.factory('databaseService', function($cordovaSQLite, $q){
 	
 	this.setTippsCommitted = function(){
 		var query = 'UPDATE Tipp SET status = \'committed\' WHERE status = \'not_committed\'';
-		return $cordovaSQLite.execute(db, query);
-	}
+		return $cordovaSQLite.execute(db, query).then(
+            function (result) {
+            },
+            function (error) {
+				console.error(error);
+            });
+	};
+	
+	this.getAllTippsNotCommitted = function(){
+		var query = 'SELECT * FROM Tipp WHERE status = \'not_committed\'';
+		return this.executeQuery(query, []).then(function (result) {
+			var tipps = [];
+			if (result.rows.length > 0) {
+				for (var i = 0; i < result.rows.length; i++) {
+					var tipp = {
+						begegnung_fid: null,
+						tipprunde_fid: null,
+						benutzer_fid: null,
+						tipp_tore_heimmannschaft: null,
+						tipp_tore_auswaertsmannschaft: null,
+					};
+					tipp.begegnung_fid = result.rows.item(i).begegnung_fid;
+					tipp.tipprunde_fid = result.rows.item(i).tipprunde_fid;
+					tipp.benutzer_fid = result.rows.item(i).benutzer_fid;
+					tipp.tipp_tore_heimmannschaft = result.rows.item(i).tipp_tore_heimmannschaft;
+					tipp.tipp_tore_auswaertsmannschaft = result.rows.item(i).tipp_tore_auswaertsmannschaft;
+					tipps.push(tipp);
+				};                
+			};
+			return tipps;
+		});
+	};
 	
 	this.getAllTipprunden = function(){
 		var query = 'SELECT * FROM Tipprunde';
@@ -95,14 +133,14 @@ myApp.factory('databaseService', function($cordovaSQLite, $q){
 						benutzer_fid: null,
 						tipp_tore_heimmannschaft: null,
 						tipp_tore_auswaertsmannschaft: null,
-						tipp_datum: null
+						status: null,
 					};
 					tipp.begegnung_fid = result.rows.item(i).begegnung_fid;
 					tipp.tipprunde_fid = result.rows.item(i).tipprunde_fid;
 					tipp.benutzer_fid = result.rows.item(i).benutzer_fid;
 					tipp.tipp_tore_heimmannschaft = result.rows.item(i).tipp_tore_heimmannschaft;
 					tipp.tipp_tore_auswaertsmannschaft = result.rows.item(i).tipp_tore_auswaertsmannschaft;
-					tipp.tipp_datum = result.rows.item(i).tipp_datum;
+					tipp.status = result.rows.item(i).status;
 					tipps.push(tipp);
 				};                
 			};
@@ -129,6 +167,16 @@ myApp.factory('databaseService', function($cordovaSQLite, $q){
 		});
 	};
 	
+	this.changeTipp = function(tipp){
+		var query = 'UPDATE Tipp SET tipp_tore_heimmannschaft = ?, tipp_tore_auswaertsmannschaft = ?, status = \'not_committed\' WHERE begegnung_fid = ? AND tipprunde_fid = ? AND benutzer_fid = ?';
+		return $cordovaSQLite.execute(db, query, [tipp.tipp_tore_heimmannschaft, tipp.tipp_tore_auswaertsmannschaft, tipp.begegnung_fid, tipp.tipprunde_fid, tipp.benutzer_fid]).then(
+            function (result) {
+            },
+            function (error) {
+				console.error(error);
+            });
+	};
+	
 	this.insertDataIntoTable = function(tablename, data){
 		var columns = Object.keys(data);
 		var questionmarks = "";
@@ -146,8 +194,13 @@ myApp.factory('databaseService', function($cordovaSQLite, $q){
 			}
 		};
 		
-		var query = 'INSERT OR IGNORE INTO ' + tablename + ' (' + columns + ') VALUES (' + questionmarks + ')';
-		return $cordovaSQLite.execute(db, query, values);
+		var query = 'INSERT INTO ' + tablename + ' (' + columns + ') VALUES (' + questionmarks + ')';
+		return $cordovaSQLite.execute(db, query, values).then(
+            function (result) {
+            },
+            function (error) {
+				console.error(error);
+            });
 	};
 
 return this;
