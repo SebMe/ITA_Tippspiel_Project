@@ -202,6 +202,32 @@ myApp.factory('databaseService', function($cordovaSQLite, $q){
 				console.error(error);
             });
 	};
+	
+		this.insertOrReplaceDataIntoTable = function(tablename, data){
+		var columns = Object.keys(data);
+		var questionmarks = "";
+		var values = [];
+		
+		for(var key in data){
+			values.push(data[key])
+		};
+		
+		for (var i = 0; i<columns.length;i++){
+			if(i != columns.length-1){
+				questionmarks = questionmarks + '?,'
+			}else{
+				questionmarks = questionmarks + '?'
+			}
+		};
+		
+		var query = 'INSERT OR REPLACE INTO ' + tablename + ' (' + columns + ') VALUES (' + questionmarks + ')';
+		return $cordovaSQLite.execute(db, query, values).then(
+            function (result) {
+            },
+            function (error) {
+				console.error(error);
+            });
+	};
 
 return this;
 });

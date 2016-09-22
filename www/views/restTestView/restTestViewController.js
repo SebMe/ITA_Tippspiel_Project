@@ -89,4 +89,10 @@ myApp.controller('restTestViewController', function ($scope, restService, databa
 			$scope.returnedData = data;
 		});
 	};
+	
+	$scope.triggerServerFetchOpenLigaDB = function(){	
+		restService.triggerServerFetchOpenLigaDB().then(function(response){
+			$scope.returnedData = response;
+		});
+	};
 });
