@@ -26,7 +26,7 @@ angular.module('app.controllers', [])
     var tipp = {
       begegnung_fid: 1,
       tipprunde_fid: 1,
-      benutzer_fid: loggedInBenutzerID,
+      benutzer_fid: 1,//loggedInBenutzerID,
       tipp_tore_heimmannschaft: 3,
       tipp_tore_auswaertsmannschaft: 4,
       status: null,
