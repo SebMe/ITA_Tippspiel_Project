@@ -4,22 +4,24 @@
             <ion-list id="registrierung-list2">
                 <label class="item item-input" id="registrierung-input6">
                     <span class="input-label">Benutzername</span>
-                    <input type="text" placeholder="">
+                    <input type="text" placeholder="" ng-model="benutzer.benutzer_username">
                 </label>
                 <label class="item item-input" id="registrierung-input5">
                     <span class="input-label">Mailadresse</span>
-                    <input type="text" placeholder="">
+                    <input type="text" placeholder="" ng-model="benutzer.benutzer_mailadresse">
                 </label>
                 <label class="item item-input" id="registrierung-input7">
                     <span class="input-label">Passwort</span>
-                    <input type="text" placeholder="">
+                    <input type="text" placeholder="" ng-model="benutzer.benutzer_passwort">
                 </label>
                 <label class="item item-input" id="registrierung-input10">
                     <span class="input-label">Passwort wiederholen</span>
-                    <input type="text" placeholder="">
+                    <input type="text" placeholder="" ng-model="benutzer.benutzer_passwort">
                 </label>
             </ion-list>
-            <a ui-sref="login" id="registrierung-button4" class="button button-balanced  button-block">Registrieren</a>
+            <!--<a ui-sref="login" id="registrierung-button4" class="button button-balanced  button-block">Registrieren</a>-->
+            <a id="registrierung-button4" class="button button-balanced  button-block" ng-click="register()">Registrieren</a>
+			{{serverResponse}}
         </form>
     </ion-content>
 </ion-view>

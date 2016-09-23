@@ -139,19 +139,47 @@ function ($scope, $stateParams) {
 }])
 
      
-.controller('registrierungCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('registrierungCtrl', ['$scope', '$stateParams', 'restService', '$state', 'dataService', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams) {
-
+function ($scope, $stateParams, restService, $state, dataService) {
+	$scope.benutzer = dataService.getBenutzer();
+	$scope.register = function(){
+		restService.createUser($scope.benutzer).then(function(response){
+			if(response == 'User was created.'){
+				$state.go("login");
+			}else{
+				$scope.serverResponse = response;
+			}
+		});
+	};
 
 }])
    
-.controller('loginCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('loginCtrl', ['$scope', '$stateParams', 'dataService', 'databaseService', 'restService', '$state', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams) {
-
+function ($scope, $stateParams, dataService, databaseService, restService, $state) {
+	
+	$scope.benutzer = dataService.getBenutzer();
+	
+    $scope.login = function() {
+		databaseService.getBenutzer().then(function(users){
+		  // Enable console in command line: start app with "ionic serve", enter, then type "c", enter
+		  // Using console for debug purposes to see what we retrieved from db
+		  for (var i = 0; i < users.length; i++) {
+			console.log(users[i].benutzer_username);
+		  };
+		  
+		  for (var i = 0; i < users.length; i++) {
+			if(users[i].benutzer_username == $scope.benutzer.benutzer_username && users[i].benutzer_passwort == $scope.benutzer.benutzer_passwort){
+			  dataService.setBenutzer(users[i]);
+			  console.log(users[i]);
+			  $state.go("tabsController.spiele");
+			};
+		  };
+		});   
+    }
 
 }])
    
