@@ -85,7 +85,7 @@ this.sendTippsToServer = function(){
 					return 'All offline created or changed Tipps send to server.';
 				});
 			}else{
-				return response.data;
+				return 'Offline created or changed Tipps were send to Server but Server did not correctly insert or update.';
 			}
 		});
 	});
