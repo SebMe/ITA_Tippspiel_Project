@@ -3,24 +3,20 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
+// 'starter.services' is found in services.js
+// 'starter.controllers' is found in controllers.js
+var myApp = angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives','app.services',])
 
-var db = null;
-
-var myApp = angular.module('starter', ['ionic', 'ngCordova'])
-
-.run(function($ionicPlatform, $cordovaSQLite) {
+.run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
-    if(window.cordova && window.cordova.plugins.Keyboard) {
-      // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-      // for form inputs)
+    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+    // for form inputs)
+    if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-
-      // Don't remove this line unless you know what you are doing. It stops the viewport
-      // from snapping when text inputs are focused. Ionic handles this internally for
-      // a much nicer keyboard experience.
       cordova.plugins.Keyboard.disableScroll(true);
     }
-    if(window.StatusBar) {
+    if (window.StatusBar) {
+      // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
 	
@@ -63,37 +59,4 @@ var myApp = angular.module('starter', ['ionic', 'ngCordova'])
 myApp.config(function ($ionicConfigProvider) {
     $ionicConfigProvider.tabs.position('bottom');
     $ionicConfigProvider.tabs.style("standard"); //Makes them all look the same across all OS
-});
-
-  // State Machine for the App, common way to have more than one view
-// See http://learn.ionicframework.com/formulas/navigation-and-routing-part-1/
-myApp.config(function ($stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.otherwise('/')
-
-    $stateProvider.state('state_restTestViewDisplayed', {
-        url: '/restTestView',
-        views: {
-            name_restTestView: {
-                templateUrl: 'views/restTestView/restTestView.html'
-            }
-        }
-    });
-	
-	$stateProvider.state('state_loginViewDisplayed', {
-        url: '/loginView',
-        views: {
-            name_loginView: {
-                templateUrl: 'views/loginView/loginView.html'
-            }
-        }
-    });
-	
-		$stateProvider.state('state_groupListViewDisplayed', {
-        url: '/groupListView',
-        views: {
-            name_groupListView: {
-                templateUrl: 'views/groupListView/groupListView.html'
-            }
-        }
-    });
 });

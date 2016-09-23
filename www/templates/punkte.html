@@ -1,0 +1,18 @@
+<ion-view title="Punkte" id="page8">
+    <ion-content padding="true" class="has-header">
+    <button ng-click="addEntry()" class="button icon ion-bug">add item</button>
+        <ion-list option-buttons="itemButtons" can-swipe="true">
+            <label class="item item-divider">
+                List
+            </label>
+            <ion-item ng-if="list.length == 0">
+                Press <i class="icon ion-ios7-plus-outline"></i> to add item
+            </ion-item>
+            <!--  -->
+            <ion-item ng-repeat="item in list" item="item" item-type="item item-icon-left" ng-click="makeDefault(item)" ng-tap="makeDefault(item)">
+                        <i ng-if="item.useAsDefault" class="icon ion-checkmark"></i>
+                        {{ item.description }}
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>
