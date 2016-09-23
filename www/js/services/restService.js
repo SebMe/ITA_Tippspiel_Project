@@ -2,7 +2,7 @@ myApp.factory('restService', function($http, databaseService, dataService){
 
 //var serverURL = 'http://192.168.2.102';
 var serverURL = 'http://127.0.0.1';
-
+/*
 this.getOpenLigaMatches = function(){
 	return $http.get('http://www.openligadb.de/api/getmatchdata/em2016/2016/1');
 };
@@ -10,7 +10,7 @@ this.getOpenLigaMatches = function(){
 // See http://angulartricks.com/how-to-do-http-post-with-angularjs-in-php/
 this.postDataToServer = function(table, values){	
 	return $http.post(serverURL+'/restController.php', {tablename: table, data: values});
-};
+};*/
 
 // This function will retrieve all data from server (for the given table) that the client not yet has, the new data is then inserted in the client db
 this.syncTableWithServer = function(table){
@@ -27,7 +27,7 @@ this.syncTableWithServer = function(table){
 					newestDBEntryAsString = response.data[i]["version"];
 				};
 				delete oneTableRow["version"];
-				databaseService.insertDataIntoTable(table, oneTableRow);
+				databaseService.insertOrReplaceDataIntoTable(table, oneTableRow);
 			};
 			// We received data, store the date of the newest entry as version, so the next sync with server will not receive the data we already have
 			if(newestDBEntryDate > 0){
@@ -76,6 +76,7 @@ this.createTipp = function(tipp){
 	});
 };
 
+// This will send all all tipps with status=not_committed to the server
 this.sendTippsToServer = function(){
 	return databaseService.getAllTippsNotCommitted().then(function(notCommittedTipps){	
 		return $http.post(serverURL+'/restController.php', {createOrUpdateTipps:1, tipps: notCommittedTipps}).then(function(response){
@@ -88,6 +89,16 @@ this.sendTippsToServer = function(){
 			}
 		});
 	});
+};
+
+this.triggerServerFetchOpenLigaDB = function(){
+	return $http.post(serverURL+'/restController.php', {serverFetchOpenLigaDB:1}).then(function(response){
+		if(response.data == 'success'){
+			return 'Server loaded new data from OpenLigaDB';
+		}else{
+			return response.data;
+		};
+	});	
 };
 
 return this;

@@ -1,0 +1,11 @@
+<ion-view ng-controller="restTestViewController">
+	<button class="button button-block button-calm" ng-click="testSQL()">SQLTest</button>
+	<button class="button button-block button-calm" ng-click="testCreateTipprunde()">CreateTipprunde</button>
+	<button class="button button-block button-calm" ng-click="testCreateTipp()">CreateTipp</button>
+	<button class="button button-block button-calm" ng-click="testChangeTipp()">ChangeTipp</button>
+	<button class="button button-block button-calm" ng-click="getAllTipprunden()">getAllTipprunden</button>
+	<button class="button button-block button-calm" ng-click="getAllTippsForTipprunde()">getAllTippsForTipprunde</button>
+	<button class="button button-block button-calm" ng-click="getPunkteForAllUsersOfTipprunde()">getPunkteForAllUsersOfTipprunde</button>
+	<button class="button button-block button-calm" ng-click="triggerServerFetchOpenLigaDB()">triggerServerFetchOpenLigaDB</button>
+	{{returnedData}}
+</ion-view>
