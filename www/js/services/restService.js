@@ -2,15 +2,6 @@ myApp.factory('restService', function($http, databaseService, dataService){
 
 //var serverURL = 'http://192.168.2.102';
 var serverURL = 'http://127.0.0.1';
-/*
-this.getOpenLigaMatches = function(){
-	return $http.get('http://www.openligadb.de/api/getmatchdata/em2016/2016/1');
-};
-
-// See http://angulartricks.com/how-to-do-http-post-with-angularjs-in-php/
-this.postDataToServer = function(table, values){	
-	return $http.post(serverURL+'/restController.php', {tablename: table, data: values});
-};*/
 
 // This function will retrieve all data from server (for the given table) that the client not yet has, the new data is then inserted in the client db
 this.syncTableWithServer = function(table){
@@ -56,7 +47,9 @@ this.createUser = function(userdata){
 
 // Tipprunde will be created at the server, if successfull the Tipprunde is also created in the app db
 this.createTipprunde = function(tipprundeData){
-	return $http.post(serverURL+'/restController.php', {createTipprunde:1, tipprunde: tipprundeData}).then(function(response){
+	var benutzer = dataService.getBenutzer();
+	var loggedInbenutzer_id = benutzer.benutzer_id;
+	return $http.post(serverURL+'/restController.php', {createTipprunde:1, tipprunde: tipprundeData, benutzer_id: loggedInbenutzer_id}).then(function(response){
 		if(response.data >= 0){
 			tipprundeData.tipprunde_id = response.data;
 			return databaseService.insertDataIntoTable('Tipprunde', tipprundeData).then(function(response){
@@ -67,6 +60,23 @@ this.createTipprunde = function(tipprundeData){
 		}
 	});
 };
+
+this.createBenutzerSpieltTipprunde = function(param_tipprunde_id, param_benutzer_id){
+	var data = {
+		benutzer_fid: param_benutzer_id,
+		tipprunde_fid: param_tipprunde_id,
+		punkte: 0
+	};
+	return $http.post(serverURL+'/restController.php', {createBenutzerSpieltTipprunde:1, dataToInsert:data}).then(function(response){
+		if(response.data == 'success'){
+			return databaseService.insertDataIntoTable('Benutzer_spielt_Tipprunde', data).then(function(response){
+				return 'Benutzer now assigned to Tipprunde.';
+			});
+		}else{
+			return response.data;
+		}
+	});
+}
 
 // Tipp will be created in the app db. Use sendTippsToServer to try and send all offline created Tipps to the server
 this.createTipp = function(tipp){

@@ -11,22 +11,30 @@ angular.module('app.controllers', [])
   $scope.testCreateTipprunde = function(){
     var tipprunde = {
       tipprunde_id: null,
-      tipprunde_name: 'FHTipprunde5',
+      tipprunde_name: 'FHTipprunde7',
       tipprunde_passwort: 'geheim',
       europameisterschaft_fid: 1,   
     };
     
     restService.createTipprunde(tipprunde).then(function(response){
-      $scope.returnedData = response;
+	 $scope.returnedData = response;
     });
   };
+    
+    $scope.testUserJoinsTipprunde = function(){
+		var loggedInBenutzerID = dataService.getBenutzer().benutzer_id;
+		var tipprunde_id = 16;
+		restService.createBenutzerSpieltTipprunde(tipprunde_id, loggedInBenutzerID).then(function(response){
+			$scope.returnedData = response;
+		});
+	}
   
   $scope.testCreateTipp = function(){
     var loggedInBenutzerID = dataService.getBenutzer().benutzer_id;
     var tipp = {
-      begegnung_fid: 1,
-      tipprunde_fid: 1,
-      benutzer_fid: 1,//loggedInBenutzerID,
+      begegnung_fid: 165,
+      tipprunde_fid: 16,
+      benutzer_fid: loggedInBenutzerID,
       tipp_tore_heimmannschaft: 3,
       tipp_tore_auswaertsmannschaft: 4,
       status: null,
@@ -38,7 +46,7 @@ angular.module('app.controllers', [])
     });
     
     // Create a second tipp
-    tipp.begegnung_fid = 2;
+    tipp.begegnung_fid = 166;
     restService.createTipp(tipp).then(function(response){
       $scope.returnedData = response;
     });
@@ -49,7 +57,7 @@ angular.module('app.controllers', [])
   };
   
   $scope.testChangeTipp = function(){
-    var tipprunde_id = 1;
+    var tipprunde_id = 16;
     databaseService.getAllTippsForTipprunde(tipprunde_id).then(function(response){
       var tipps = response;
       tipps[0]["tipp_tore_auswaertsmannschaft"] = 777;
@@ -206,7 +214,7 @@ function ($scope, $stateParams) {
 
 }])
    
-.controller('tipprundenCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('tipprundenCtrl', ['$scope', '$stateParams', 'databaseService', 'restService', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
 function ($scope, $stateParams) {
