@@ -218,10 +218,11 @@ function ($scope, $stateParams) {
   };
 
   $scope.showTipprundenCreator = function() {
+    //$scope.tipprunde_name="ladida";
 
   var myPopup = $ionicPopup.show({
     // TODO
-    template: '<input type="text" >', <!-- ng-model="data.wifi" -->
+    template: '<input type="text" placeholder="Name der Tipprunde">', <!-- ng-model="" -->
     title: 'Tipprunde anlegen',
     //subTitle: 'Untertitel',
     scope: $scope,
@@ -231,7 +232,7 @@ function ($scope, $stateParams) {
         text: '<b>Speichern</b>',
         type: 'button-positive',
         onTap: function(e) {
-          if (!$scope.data.wifi) {
+          if (!$scope.tipprunde.tipprunde_name) {
 
             // DO SOMETHING
 
