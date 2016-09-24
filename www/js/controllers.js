@@ -164,23 +164,28 @@ function ($scope, $stateParams, dataService, databaseService, restService, $stat
 	$scope.benutzer = dataService.getBenutzer();
 	
     $scope.login = function() {
-		databaseService.getBenutzer().then(function(users){
-		  // Enable console in command line: start app with "ionic serve", enter, then type "c", enter
-		  // Using console for debug purposes to see what we retrieved from db
-		  for (var i = 0; i < users.length; i++) {
-			console.log(users[i].benutzer_username);
-		  };
-		  
-		  for (var i = 0; i < users.length; i++) {
-			if(users[i].benutzer_username == $scope.benutzer.benutzer_username && users[i].benutzer_passwort == $scope.benutzer.benutzer_passwort){
-			  dataService.setBenutzer(users[i]);
-			  console.log(users[i]);
-			  $state.go("tabsController.spiele");
-			};
-		  };
-		});   
+  		databaseService.getBenutzer().then(function(users){
+  		  // Enable console in command line: start app with "ionic serve", enter, then type "c", enter
+  		  // Using console for debug purposes to see what we retrieved from db
+  		  for (var i = 0; i < users.length; i++) {
+  			console.log(users[i].benutzer_username);
+  		  };
+  		  
+  		  for (var i = 0; i < users.length; i++) {
+  			if(users[i].benutzer_username == $scope.benutzer.benutzer_username && users[i].benutzer_passwort == $scope.benutzer.benutzer_passwort){
+  			  dataService.setBenutzer(users[i]);
+  			  console.log(users[i]);
+  			  $state.go("tabsController.spiele");
+  			};
+  		  };
+  		});   
     }
 
+    $scope.continue = function() {
+      databaseService.getBenutzer().then(function(users){
+          $state.go("tabsController.spiele");
+      }
+    )}
 }])
    
 .controller('punkteCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
@@ -198,18 +203,56 @@ function ($scope, $stateParams) {
 
 }])
    
-.controller('spieleCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
-// You can include any angular dependencies as parameters for this function
-// TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams) {
 
+.controller('spieleCtrl', function($scope, $ionicPopup, $timeout) {
+  $scope.getTipprundenName = function () {
+      $scope.tipprunde.name = 'Tipprunde';
+  };
 
-}])
+  $scope.showTipprundenCreator = function() {
+
+  var myPopup = $ionicPopup.show({
+    // TODO
+    template: '<input type="text" >', <!-- ng-model="data.wifi" -->
+    title: 'Tipprunde anlegen',
+    //subTitle: 'Untertitel',
+    scope: $scope,
+    buttons: [
+      { text: 'Zurück' },
+      {
+        text: '<b>Speichern</b>',
+        type: 'button-positive',
+        onTap: function(e) {
+          if (!$scope.data.wifi) {
+
+            // DO SOMETHING
+
+            //don't allow the user to close 
+            //e.preventDefault();
+            
+            // close programatically
+            //myPopup.close();
+          } else {
+            // ELSE
+          }
+        }
+      }
+    ]
+  });
+  };
+})
+
    
 .controller('tipprundenCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
 function ($scope, $stateParams) {
+
+
+
+
+
+
 
 
 }])
@@ -242,7 +285,7 @@ function ($scope, $stateParams) {
 }])
 
 .controller('testPageCtrl', function($scope, $ionicPopup, $timeout) {
-  <!-- $scope.data = {} -->
+  // $scope.data = {} 
 
   $scope.addEntry = function() {
 
