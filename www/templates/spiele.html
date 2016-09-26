@@ -1,17 +1,9 @@
 <ion-view title="Spiele" id="page9" hide-nav-bar="true"  ng-controller="spieleCtrl">
 
-
   <ion-header-bar class="bar-balanced">
     <h1 class="title">Spiele</h1>
-    <!--
-    <div class="buttons">
-      <button class="button" ng-click="showTipprundenCreator()">Tipprunde anlegen</button>
-    </div>
--->
   </ion-header-bar>
-
-
-
+  
     <ion-content padding="true" class="has-header">
         <form id="spiele-form7" class="list">
             <label class="item item-select" id="spiele-select2" name="selectSpiele">
@@ -26,13 +18,13 @@
                     <option>Finale</option>
                 </select>
             </label>
-            <ion-checkbox name="cbTippFuerAlleRunden">Tipp für alle Tipprunden</ion-checkbox>
         </form>
-        <!--
-        <div ng-app="">
-            Name: <input ng-model="name">
-            <h1>You entered: {{name}}</h1>
-        </div>
-        -->
     </ion-content>
+	
+	<ion-scroll overflow-scroll="true" zooming="true" direction="y" style="width: 100%; height: 60%; margin-top:20%">
+		<a ng-repeat="begegnung in begegnungen" class="item item-thumbnail-left" style="margin-left:5%; margin-right:5%; margin-top:%0; border: thick; border-bottom:groove;" ng-click = 'begegnungClicked(begegnung)'>
+			{{begegnung.heimmannschaft}} vs {{begegnung.auswaertsmannschaft}} {{begegnung.begegnung_tore_heimmannschaft}} : {{begegnung.begegnung_tore_auswaertsmannschaft}} <br>
+			 Tipp: {{begegnung.tipp_tore_heimmannschaft}} : {{begegnung.tipp_tore_auswaertsmannschaft}}
+		</a>
+	</ion-scroll>
 </ion-view>

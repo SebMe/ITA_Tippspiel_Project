@@ -119,6 +119,14 @@ myApp.factory('databaseService', function($cordovaSQLite, $q){
 			};
 			return tipprunden;
 		});
+	};	
+	
+	this.checkUserPlaysTipprunde = function(benutzer_id, tipprunde_id){
+		var query = 'SELECT * FROM Benutzer_spielt_Tipprunde WHERE benutzer_fid = ? AND tipprunde_fid = ?';
+		return this.executeQuery(query, [benutzer_id, tipprunde_id]).then(function (result) {
+			var userPlaysTipprunde = result.rows.length > 0;
+			return userPlaysTipprunde;
+		});
 	};
 	
 	this.getAllTippsForTipprunde = function(tipprunde_id){
@@ -165,6 +173,37 @@ myApp.factory('databaseService', function($cordovaSQLite, $q){
 			};
 			return userWithPoints;
 		});
+	};	
+	
+	this.getBegegnungWithBenutzerTippForTipprunde = function(benutzer_id, tipprunde_id){
+		var query = 'select (select mannschaft_name from mannschaft m where m.mannschaft_id = b.heimmannschaft_fid)heimmannschaft, (select mannschaft_name from mannschaft m where m.mannschaft_id = b.auswaertsmannschaft_fid)auswaertsmannschaft, begegnung_id, begegnung_tore_heimmannschaft, begegnung_tore_auswaertsmannschaft, t.tipp_tore_heimmannschaft, t.tipp_tore_auswaertsmannschaft, g.gruppe_name from begegnung b join gruppe g on b.gruppe_fid = g.gruppe_id left join tipp t on b.begegnung_id = t.begegnung_fid where t.benutzer_fid = ? AND t.tipprunde_fid = ? OR t.benutzer_fid is null';
+		var begegnungen = [];
+		return this.executeQuery(query, [benutzer_id, tipprunde_id]).then(function (result) {
+			if (result.rows.length > 0) {
+				for (var i = 0; i < result.rows.length; i++) {
+					var begegnungWithTipp = {
+						begegnung_id: null,
+						begegnung_tore_auswaertsmannschaft: null,
+						begegnung_tore_heimmannschaft: null,
+						tipp_tore_auswaertsmannschaft: null,
+						tipp_tore_heimmannschaft: null,
+						heimmannschaft: null,
+						auswaertsmannschaft: null,
+						gruppe: null
+					};
+					begegnungWithTipp.begegnung_id = result.rows.item(i).begegnung_id;
+					begegnungWithTipp.begegnung_tore_auswaertsmannschaft = result.rows.item(i).begegnung_tore_auswaertsmannschaft;
+					begegnungWithTipp.begegnung_tore_heimmannschaft = result.rows.item(i).begegnung_tore_heimmannschaft;
+					begegnungWithTipp.tipp_tore_auswaertsmannschaft = result.rows.item(i).tipp_tore_auswaertsmannschaft;
+					begegnungWithTipp.tipp_tore_heimmannschaft = result.rows.item(i).tipp_tore_heimmannschaft;
+					begegnungWithTipp.heimmannschaft = result.rows.item(i).heimmannschaft;
+					begegnungWithTipp.auswaertsmannschaft = result.rows.item(i).auswaertsmannschaft;
+					begegnungWithTipp.gruppe = result.rows.item(i).gruppe;
+					begegnungen.push(begegnungWithTipp);
+				};                
+			};
+			return begegnungen;
+		});
 	};
 	
 	this.changeTipp = function(tipp){
@@ -203,7 +242,7 @@ myApp.factory('databaseService', function($cordovaSQLite, $q){
             });
 	};
 	
-		this.insertOrReplaceDataIntoTable = function(tablename, data){
+	this.insertOrReplaceDataIntoTable = function(tablename, data){
 		var columns = Object.keys(data);
 		var questionmarks = "";
 		var values = [];
@@ -222,11 +261,12 @@ myApp.factory('databaseService', function($cordovaSQLite, $q){
 		
 		var query = 'INSERT OR REPLACE INTO ' + tablename + ' (' + columns + ') VALUES (' + questionmarks + ')';
 		return $cordovaSQLite.execute(db, query, values).then(
-            function (result) {
-            },
-            function (error) {
+			function (result) {
+			},
+			function (error) {
 				console.error(error);
-            });
+			}
+		);
 	};
 
 return this;

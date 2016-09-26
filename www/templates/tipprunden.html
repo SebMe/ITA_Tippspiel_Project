@@ -18,9 +18,9 @@
   </ion-content>
   -->
   
-	<ion-scroll overflow-scroll="true" zooming="true" direction="y" style="width: 100%; height: 60%;">
-	<a ng-repeat="tipprunde in tipprunden" class="item item-thumbnail-left" style="margin-left:5%; margin-right:5%; margin-top:%0; border: thick; border-bottom:groove;" ng-click = 'tipprundeClicked()'>
-		<h1>{{tipprunde.tipprunde_name}}</h1>
+	<ion-scroll overflow-scroll="true" zooming="true" direction="y" style="width: 100%; height: 60%; margin-top:20%">
+	<a ng-repeat="tipprunde in tipprunden" class="item item-thumbnail-left" style="margin-left:5%; margin-right:5%; margin-top:%0; border: thick; border-bottom:groove;" ng-click = 'tipprundeClicked(tipprunde)'>
+		<h2>{{tipprunde.tipprunde_name}}</h2>
 	</a>
 	</ion-scroll>
   

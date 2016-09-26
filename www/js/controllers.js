@@ -171,7 +171,7 @@ function ($scope, $stateParams, dataService, databaseService, restService, $stat
 
 	$scope.continue = function() {
       databaseService.getBenutzer().then(function(users){
-          $state.go("tabsController.spiele");
+          $state.go("tabsController.tipprunden");
       }
     )}
 
@@ -189,7 +189,7 @@ function ($scope, $stateParams, dataService, databaseService, restService, $stat
   			if(users[i].benutzer_username == $scope.benutzer.benutzer_username && users[i].benutzer_passwort == $scope.benutzer.benutzer_passwort){
   			  dataService.setBenutzer(users[i]);
   			  console.log(users[i]);
-  			  $state.go("tabsController.spiele");
+  			  $state.go("tabsController.tipprunden");
   			};
   		  };
   		});   
@@ -218,8 +218,8 @@ function ($scope, $stateParams) {
 }])
    
 
-.controller('tipprundenCtrl' ,[ '$scope', 'restService', '$ionicPopup', 'databaseService',
-function($scope, restService, $ionicPopup, databaseService) {
+.controller('tipprundenCtrl' ,[ '$scope', 'restService', '$ionicPopup', 'databaseService', '$state', 'dataService',
+function($scope, restService, $ionicPopup, databaseService, $state, dataService) {
   $scope.$on('$ionicView.enter', function () {
 	  $scope.tipprunde = {
             tipprunde_id: null,
@@ -233,13 +233,46 @@ function($scope, restService, $ionicPopup, databaseService) {
 	})
   })
 
-  $scope.tipprundeClicked = function () {
-      
+  $scope.tipprundeClicked = function (clickedTipprunde) {	
+  $scope.userInput = {tipprunde_passwort: null};
+  $scope.serverResponse = '';
+	var myPopup = $ionicPopup.show({
+		template: '<input type="password" placeholder="Passwort der Tipprunde" ng-model="userInput.tipprunde_passwort">{{serverResponse}}',
+		title: 'Tipprunde beitreten',
+		scope: $scope,
+		buttons: [
+		  { text: 'Zurück' },
+		  {
+			text: '<b>Beitreten</b>',
+			type: 'button-positive',
+			onTap: function(e) {
+				e.preventDefault();
+				if($scope.userInput.tipprunde_passwort == clickedTipprunde.tipprunde_passwort){
+					var benutzer = dataService.getBenutzer();
+					databaseService.checkUserPlaysTipprunde(benutzer.benutzer_id,clickedTipprunde.tipprunde_id).then(function(response){			
+						if(response == false){
+							restService.createBenutzerSpieltTipprunde(clickedTipprunde.tipprunde_id, benutzer.benutzer_id).then(function(response){
+								dataService.setSelectedTipprunde(clickedTipprunde);
+								$state.go("tabsController.spiele");
+								myPopup.close();
+							});
+						} else {
+							dataService.setSelectedTipprunde(clickedTipprunde);
+							$state.go("tabsController.spiele");
+							myPopup.close();
+						}
+					});
+				} else {
+					$scope.serverResponse = 'Falsches Passwort';
+				}
+			}
+		  }
+		]
+	});
   };
 
   $scope.showTipprundenCreator = function() {
 	  $scope.serverResponse = "";
-    //$scope.tipprunde_name="ladida";
 	var myPopup = $ionicPopup.show({
 		template: '<input type="text" placeholder="Name der Tipprunde" ng-model="tipprunde.tipprunde_name"> <input type="password" placeholder="Passwort der Tipprunde" ng-model="tipprunde.tipprunde_passwort">{{serverResponse}}',
 		title: 'Tipprunde anlegen',
@@ -266,9 +299,66 @@ function($scope, restService, $ionicPopup, databaseService) {
   };
  }])
 
-.controller('spieleCtrl', function ($scope, restService, databaseService, dataService) {
-
-
+.controller('spieleCtrl', function ($scope, restService, databaseService, dataService, $ionicPopup) {
+	$scope.$on('$ionicView.enter', function () {
+		var loggedInBenutzerID = dataService.getBenutzer().benutzer_id;
+		var selectedTipprunde = dataService.getSelectedTipprunde();
+		if(selectedTipprunde.tipprunde_id == null){
+		    var alertPopup = $ionicPopup.alert({
+				title: 'Keine Tipprunde ausgewählt',
+				template: 'Eine Tipprunde kann über die Suche gefunden und ausgewählt werden'
+			});	
+		} else {
+			databaseService.getBegegnungWithBenutzerTippForTipprunde(loggedInBenutzerID, selectedTipprunde.tipprunde_id).then(function(response){
+				$scope.begegnungen = response;
+			});
+		}
+	});
+	
+	$scope.begegnungClicked = function(clickedBegegnung){
+	$scope.selectedBegegnung = clickedBegegnung;
+	$scope.newTipp = {
+		tipp_tore_heimmannschaft: null,
+		tipp_tore_auswaertsmannschaft: null
+	};
+	var myPopup = $ionicPopup.show({
+		template: '<input type="number" placeholder="{{selectedBegegnung.heimmannschaft}}" ng-model="newTipp.tipp_tore_heimmannschaft"> <input type="number" placeholder="{{selectedBegegnung.auswaertsmannschaft}}" ng-model="newTipp.tipp_tore_auswaertsmannschaft"> ',
+		title: 'Tipp abgeben',
+		scope: $scope,
+		buttons: [
+		  { text: 'Zurück' },
+		  {
+			text: '<b>Speichern</b>',
+			type: 'button-positive',
+			onTap: function(e) {
+				e.preventDefault();
+				var loggedInBenutzerID = dataService.getBenutzer().benutzer_id;
+				var selectedTipprunde = dataService.getSelectedTipprunde();
+				var tipp ={
+					benutzer_fid: loggedInBenutzerID,
+					tipprunde_fid: selectedTipprunde.tipprunde_id,
+					begegnung_fid: clickedBegegnung.begegnung_id,
+					tipp_tore_auswaertsmannschaft: $scope.newTipp.tipp_tore_auswaertsmannschaft,
+					tipp_tore_heimmannschaft: $scope.newTipp.tipp_tore_heimmannschaft						
+				};
+				var noTippExistsForBegegnung = clickedBegegnung.tipp_tore_auswaertsmannschaft == null;
+				
+				if(noTippExistsForBegegnung){
+					restService.createTipp(tipp).then(function(response){
+						restService.sendTippsToServer();
+						myPopup.close();
+					});
+				} else {
+					databaseService.changeTipp(tipp).then(function(response){
+						sendTippsToServer();
+						myPopup.close();
+					});
+				}
+			}
+		  }
+		]
+	});
+	}
 })
 
    
