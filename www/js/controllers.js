@@ -350,7 +350,7 @@ function($scope, restService, $ionicPopup, databaseService, $state, dataService)
 					});
 				} else {
 					databaseService.changeTipp(tipp).then(function(response){
-						sendTippsToServer();
+						restService.sendTippsToServer();
 						myPopup.close();
 					});
 				}
