@@ -35,8 +35,8 @@ angular.module('app.controllers', [])
       begegnung_fid: 165,
       tipprunde_fid: 16,
       benutzer_fid: loggedInBenutzerID,
-      tipp_tore_heimmannschaft: 0,
-      tipp_tore_auswaertsmannschaft: 1,
+      tipp_tore_heimmannschaft: 3,
+      tipp_tore_auswaertsmannschaft: 4,
       status: null,
     };
     
@@ -218,7 +218,15 @@ function ($scope, $stateParams) {
 }])
    
 
-.controller('tipprundenCtrl', function($scope, $ionicPopup, $timeout) {
+.controller('tipprundenCtrl' ,[ 'restService', function($scope, $ionicPopup, $timeout, restService) {
+  
+  var tipprunde = {
+            tipprunde_id: null,
+            tipprunde_name: null,
+            tipprunde_passwort: null,
+            europameisterschaft_fid: 1,   
+        }
+
   $scope.getTipprundenName = function () {
       $scope.tipprunde.name = 'Tipprunde';
   };
@@ -228,7 +236,7 @@ function ($scope, $stateParams) {
 
   var myPopup = $ionicPopup.show({
     // TODO
-    template: '<input type="text" placeholder="Name der Tipprunde">', <!-- ng-model="" -->
+    template: '<input type="text" placeholder="Name der Tipprunde" ng-model="tipprunde.tipprunde_name"> <input type="password" placeholder="Passwort der Tipprunde" ng-model="tipprunde.tipprunde_passwort"> {{serverResponse}}',
     title: 'Tipprunde anlegen',
     //subTitle: 'Untertitel',
     scope: $scope,
@@ -238,8 +246,18 @@ function ($scope, $stateParams) {
         text: '<b>Speichern</b>',
         type: 'button-positive',
         onTap: function(e) {
-          if (!$scope.tipprunde.tipprunde_name) {
+         // if (!$scope.tipprunde.tipprunde_name) {
+        
 
+
+      restService.createTipprunde(tipprunde).then(function(response){
+
+          if(response=='Tipprunde was created.'){
+            myPopup.close();
+          } else {
+            $scope.serverResponse=response;
+          }
+      })
             // DO SOMETHING
 
             //don't allow the user to close 
@@ -247,11 +265,7 @@ function ($scope, $stateParams) {
             
             // close programatically
             //myPopup.close();
-          } else {
-            // ELSE
-          }
-        }
-      }
+      }}
     ]
   });
   };
@@ -268,7 +282,7 @@ function ($scope, $stateParams) {
 */
 
 
-})
+}])
 
 .controller('spieleCtrl', function ($scope, restService, databaseService, dataService) {
 
