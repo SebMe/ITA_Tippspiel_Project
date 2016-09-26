@@ -168,7 +168,13 @@ function ($scope, $stateParams, restService, $state, dataService) {
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
 function ($scope, $stateParams, dataService, databaseService, restService, $state) {
-	
+
+	$scope.continue = function() {
+      databaseService.getBenutzer().then(function(users){
+          $state.go("tabsController.spiele");
+      }
+    )}
+
 	$scope.benutzer = dataService.getBenutzer();
 	
     $scope.login = function() {
@@ -177,7 +183,7 @@ function ($scope, $stateParams, dataService, databaseService, restService, $stat
   		  // Using console for debug purposes to see what we retrieved from db
   		  for (var i = 0; i < users.length; i++) {
   			console.log(users[i].benutzer_username);
-  		  };
+  		  }
   		  
   		  for (var i = 0; i < users.length; i++) {
   			if(users[i].benutzer_username == $scope.benutzer.benutzer_username && users[i].benutzer_passwort == $scope.benutzer.benutzer_passwort){
@@ -189,11 +195,18 @@ function ($scope, $stateParams, dataService, databaseService, restService, $stat
   		});   
     }
 
-    $scope.continue = function() {
-      databaseService.getBenutzer().then(function(users){
-          $state.go("tabsController.spiele");
-      }
-    )}
+    
+}])
+
+
+.controller('ladidaCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+// You can include any angular dependencies as parameters for this function
+// TIP: Access Route Parameters for your page via $stateParams.parameterName
+function ($scope, $stateParams) {
+  $scope.goTo = function(){
+        $state.go('tabsController.spiele');
+    }
+
 }])
    
 .controller('punkteCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
@@ -201,18 +214,11 @@ function ($scope, $stateParams, dataService, databaseService, restService, $stat
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
 function ($scope, $stateParams) {
 
-  
-  $scope.addEntry = function() {
-    var newItem = {};
-    newItem.description = 'bla';
-    $scope.punkte.push(newItem);
-  }
-  
 
 }])
    
 
-.controller('spieleCtrl', function($scope, $ionicPopup, $timeout) {
+.controller('tipprundenCtrl', function($scope, $ionicPopup, $timeout) {
   $scope.getTipprundenName = function () {
       $scope.tipprunde.name = 'Tipprunde';
   };
@@ -249,22 +255,26 @@ function ($scope, $stateParams) {
     ]
   });
   };
+
+/*
+******** TODO
+
+
+ $scope.getAllTipprunden = function(){ 
+    databaseService.getAllTipprunden().then(function(response){
+      $scope.returnedData = response;
+    });
+  };
+*/
+
+
 })
 
-   
-.controller('tipprundenCtrl', ['$scope', '$stateParams', 'databaseService', 'restService', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
-// You can include any angular dependencies as parameters for this function
-// TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams) {
+.controller('spieleCtrl', function ($scope, restService, databaseService, dataService) {
 
 
+})
 
-
-
-
-
-
-}])
    
 .controller('einstellungenCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
@@ -282,16 +292,6 @@ function ($scope, $stateParams) {
 
 }])
 
-
-
-   
-.controller('testPageCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
-// You can include any angular dependencies as parameters for this function
-// TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams) {
-
-
-}])
 
 .controller('testPageCtrl', function($scope, $ionicPopup, $timeout) {
   // $scope.data = {} 

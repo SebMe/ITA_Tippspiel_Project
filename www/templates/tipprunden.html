@@ -1,9 +1,6 @@
-<ion-view title="Tipprunden" id="page10" hide-nav-bar="true" ng-controller="spieleCtrl" >
+<ion-view title="Tipprunden" id="page10" hide-nav-bar="true" ng-controller="tipprundenCtrl" >
 
   <ion-header-bar class="bar-balanced">
-    <!--<div class="buttons">
-      <button class="button" ng-click="doSomething()">Left Button</button>
-    </div>-->
     <h1 class="title">Tipprunden</h1>
     <div class="buttons">
       <button class="button" ng-click="showTipprundenCreator()">Tipprunde anlegen</button>
@@ -11,12 +8,23 @@
   </ion-header-bar>
 
 	<ion-content padding="true" has-header="true">
-        <form id="tipprunden-form6" class="list">
-            <label class="item item-input" name="searchTipprundenSuche">
-                <i class="icon ion-search placeholder-icon"></i>
-                <input type="search" placeholder="Tipprunde suchen">
-            </label>
-            <ion-checkbox name="cbMeineTipprunden">Meine Tipprunden anzeigen</ion-checkbox>
-        </form>
-    </ion-content>
+<!--
+  <div id="tippListe" class="list">
+    <p>{{tipprunde.tipprunde_name}}</p>
+  </div>
+
+  <ion-list id="ladidaListe">
+    <ion-item ng-repeat="item in items">
+      Hello, {{item}}!
+    </ion-item>
+  </ion-list>
+-->
+      <form id="tipprunden-form6" class="list">
+          <label class="item item-input" name="searchTipprundenSuche">
+              <i class="icon ion-search placeholder-icon"></i>
+              <input type="search" placeholder="Tipprunde suchen">
+          </label>
+          <ion-checkbox name="cbMeineTipprunden">Meine Tipprunden anzeigen</ion-checkbox>
+      </form>
+  </ion-content>
 </ion-view>

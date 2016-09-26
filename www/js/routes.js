@@ -9,8 +9,7 @@ angular.module('app.routes', [])
   $stateProvider
     
   
-
-      .state('tabsController', {
+  .state('tabsController', {
     url: '/tabControllerElement',
     templateUrl: 'templates/tabsController.html',
     abstract:true
