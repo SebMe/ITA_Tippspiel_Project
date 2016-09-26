@@ -35,8 +35,8 @@ angular.module('app.controllers', [])
       begegnung_fid: 165,
       tipprunde_fid: 16,
       benutzer_fid: loggedInBenutzerID,
-      tipp_tore_heimmannschaft: 3,
-      tipp_tore_auswaertsmannschaft: 4,
+      tipp_tore_heimmannschaft: 0,
+      tipp_tore_auswaertsmannschaft: 1,
       status: null,
     };
     
