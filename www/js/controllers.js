@@ -218,71 +218,53 @@ function ($scope, $stateParams) {
 }])
    
 
-.controller('tipprundenCtrl' ,[ 'restService', function($scope, $ionicPopup, $timeout, restService) {
-  
-  var tipprunde = {
+.controller('tipprundenCtrl' ,[ '$scope', 'restService', '$ionicPopup', 'databaseService',
+function($scope, restService, $ionicPopup, databaseService) {
+  $scope.$on('$ionicView.enter', function () {
+	  $scope.tipprunde = {
             tipprunde_id: null,
             tipprunde_name: null,
             tipprunde_passwort: null,
             europameisterschaft_fid: 1,   
         }
+		
+	databaseService.getAllTipprunden().then(function(response){
+		$scope.tipprunden = response;
+	})
+  })
 
   $scope.getTipprundenName = function () {
       $scope.tipprunde.name = 'Tipprunde';
   };
 
   $scope.showTipprundenCreator = function() {
+	  $scope.serverResponse = "";
     //$scope.tipprunde_name="ladida";
-
-  var myPopup = $ionicPopup.show({
-    // TODO
-    template: '<input type="text" placeholder="Name der Tipprunde" ng-model="tipprunde.tipprunde_name"> <input type="password" placeholder="Passwort der Tipprunde" ng-model="tipprunde.tipprunde_passwort"> {{serverResponse}}',
-    title: 'Tipprunde anlegen',
-    //subTitle: 'Untertitel',
-    scope: $scope,
-    buttons: [
-      { text: 'Zurück' },
-      {
-        text: '<b>Speichern</b>',
-        type: 'button-positive',
-        onTap: function(e) {
-         // if (!$scope.tipprunde.tipprunde_name) {
-        
-
-
-      restService.createTipprunde(tipprunde).then(function(response){
-
-          if(response=='Tipprunde was created.'){
-            myPopup.close();
-          } else {
-            $scope.serverResponse=response;
-          }
-      })
-            // DO SOMETHING
-
-            //don't allow the user to close 
-            //e.preventDefault();
-            
-            // close programatically
-            //myPopup.close();
-      }}
-    ]
-  });
+	var myPopup = $ionicPopup.show({
+		template: '<input type="text" placeholder="Name der Tipprunde" ng-model="tipprunde.tipprunde_name"> <input type="password" placeholder="Passwort der Tipprunde" ng-model="tipprunde.tipprunde_passwort">{{serverResponse}}',
+		title: 'Tipprunde anlegen',
+		//subTitle: 'Untertitel',
+		scope: $scope,
+		buttons: [
+		  { text: 'Zurück' },
+		  {
+			text: '<b>Speichern</b>',
+			type: 'button-positive',
+			onTap: function(e) {
+				e.preventDefault();
+				restService.createTipprunde($scope.tipprunde).then(function(response){	
+					if(response=='Tipprunde was created.'){
+						myPopup.close();
+					} else {
+						$scope.serverResponse=response;
+					}
+				})
+			}
+		  }
+		]
+	});
   };
-
-/*
-******** TODO
-
-
- $scope.getAllTipprunden = function(){ 
-    databaseService.getAllTipprunden().then(function(response){
-      $scope.returnedData = response;
-    });
-  };
-*/
-
-
-}])
+ }])
 
 .controller('spieleCtrl', function ($scope, restService, databaseService, dataService) {
 
