@@ -233,8 +233,8 @@ function($scope, restService, $ionicPopup, databaseService) {
 	})
   })
 
-  $scope.getTipprundenName = function () {
-      $scope.tipprunde.name = 'Tipprunde';
+  $scope.tipprundeClicked = function () {
+      
   };
 
   $scope.showTipprundenCreator = function() {
