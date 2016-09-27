@@ -326,10 +326,6 @@ function($scope, restService, $ionicPopup, databaseService, $state, dataService)
 	};
 	
 	$scope.$on('$ionicView.enter', function () {
-		if($scope.selectedGruppe != null){
-			$scope.selectedGruppe = 'Gruppe A';
-		} ;
-
 		loadBegegnungen();
 	});
 	
