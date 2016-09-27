@@ -4,8 +4,7 @@
     <h1 class="title">Spiele</h1>
   </ion-header-bar>
   
-    <ion-content padding="true" class="has-header">
-        <form id="spiele-form7" class="list">
+        <form id="spiele-form7" class="list" style="margin-top:10%">
             <label class="item item-select" id="spiele-select2" name="selectSpiele">
                 <span class="input-label">Spieleauswahl</span>
                 <select ng-model="selectedGruppe" ng-change="selectGruppe(selectedGruppe)">
@@ -19,13 +18,12 @@
                 </select>
             </label>
         </form>
-    </ion-content>
 	
-	<ion-scroll overflow-scroll="true" zooming="true" direction="y" style="width: 100%; height: 60%; margin-top:20%">
-		<ion-item ng-repeat="begegnung in begegnungen | filter:{ gruppe_name: selectedGruppe }" class="item item-thumbnail-left" style="margin-left:5%; margin-right:5%; margin-top:%0; border: thick; border-bottom:groove;" ng-click = 'begegnungClicked(begegnung)'>
-			<div><img src="{{begegnung.heimmannschaft_flagge}}" style="width:40px;height:40px;margin-top:3%;position:absolute"/></div> <div style="margin-left:20%">{{begegnung.heimmannschaft}} vs {{begegnung.auswaertsmannschaft}} {{begegnung.begegnung_tore_heimmannschaft}} : {{begegnung.begegnung_tore_auswaertsmannschaft}}</div> <div><img src="{{begegnung.auswaertsmannschaft_flagge}}" style="width:40px;height:40px;margin-left:60%;position:absolute"/></div> <br>
-			<div style="margin-left:20%">Tipp: {{begegnung.tipp_tore_heimmannschaft}} : {{begegnung.tipp_tore_auswaertsmannschaft}}</div>
-			<div style="margin-left:20%">{{begegnung.gruppe_name}}</div>
-		</ion-item>
+	<ion-scroll overflow-scroll="false" zooming="true" direction="y" style="width: 100%; height: 60%">
+		<a ng-repeat="begegnung in begegnungen | filter:{ gruppe_name: selectedGruppe }" class="item" style="margin-left:5%; margin-right:5%; margin-top:%0; border: thick; border-bottom:groove;" ng-click = 'begegnungClicked(begegnung)'>
+			<div><img src="{{begegnung.heimmannschaft_flagge}}" style="width:20px;height:20px"/> {{begegnung.heimmannschaft}} vs {{begegnung.auswaertsmannschaft}} {{begegnung.begegnung_tore_heimmannschaft}} : {{begegnung.begegnung_tore_auswaertsmannschaft}} <img src="{{begegnung.auswaertsmannschaft_flagge}}" style="width:20px;height:20px"/></div> <br>
+			<div>Tipp: {{begegnung.tipp_tore_heimmannschaft}} : {{begegnung.tipp_tore_auswaertsmannschaft}}</div> <br>
+			<div>{{begegnung.gruppe_name}}</div>
+		</a>
 	</ion-scroll>
 </ion-view>

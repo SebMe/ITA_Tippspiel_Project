@@ -291,6 +291,11 @@ function($scope, restService, $ionicPopup, databaseService, $state, dataService)
 			type: 'button-positive',
 			onTap: function(e) {
 				e.preventDefault();
+				if($scope.tipprunde.tipprunde_name == null || $scope.tipprunde.tipprunde_name == "" ||
+					$scope.tipprunde.tipprunde_passwort == null || $scope.tipprunde.tipprunde_passwort == "" ){
+						return;
+					}
+					
 				restService.createTipprunde($scope.tipprunde).then(function(response){	
 					if(response=='Tipprunde was created.'){
 						databaseService.getAllTipprunden().then(function(response){
@@ -340,7 +345,7 @@ function($scope, restService, $ionicPopup, databaseService, $state, dataService)
 			tipp_tore_auswaertsmannschaft: null
 		};
 		var myPopup = $ionicPopup.show({
-			template: '<input type="number" placeholder="{{selectedBegegnung.heimmannschaft}}" ng-model="newTipp.tipp_tore_heimmannschaft"> <input type="number" placeholder="{{selectedBegegnung.auswaertsmannschaft}}" ng-model="newTipp.tipp_tore_auswaertsmannschaft"> ',
+			template:  '<label class="item-input"> <span class="input-label">{{selectedBegegnung.heimmannschaft}}</span> <input type="number" ng-model="newTipp.tipp_tore_heimmannschaft"></label> <label class="item-input"> <span class="input-label">{{selectedBegegnung.auswaertsmannschaft}}</span> <input type="number" ng-model="newTipp.tipp_tore_auswaertsmannschaft"></label> ',
 			title: 'Tipp abgeben',
 			scope: $scope,
 			buttons: [
