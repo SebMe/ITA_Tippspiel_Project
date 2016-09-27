@@ -176,7 +176,7 @@ myApp.factory('databaseService', function($cordovaSQLite, $q){
 	};	
 	
 	this.getBegegnungWithBenutzerTippForTipprunde = function(benutzer_id, tipprunde_id){
-		var query = 'select (select mannschaft_name from mannschaft m where m.mannschaft_id = b.heimmannschaft_fid)heimmannschaft, (select mannschaft_name from mannschaft m where m.mannschaft_id = b.auswaertsmannschaft_fid)auswaertsmannschaft, begegnung_id, begegnung_tore_heimmannschaft, begegnung_tore_auswaertsmannschaft, t.tipp_tore_heimmannschaft, t.tipp_tore_auswaertsmannschaft, g.gruppe_name from begegnung b join gruppe g on b.gruppe_fid = g.gruppe_id left join (select * from tipp where benutzer_fid = ? AND tipprunde_fid = ?) t on b.begegnung_id = t.begegnung_fid';
+		var query = 'select (select mannschaft_name from mannschaft m where m.mannschaft_id = b.heimmannschaft_fid)heimmannschaft, (select mannschaft_flagge from mannschaft m where m.mannschaft_id = b.heimmannschaft_fid)heimmannschaft_flagge, (select mannschaft_name from mannschaft m where m.mannschaft_id = b.auswaertsmannschaft_fid)auswaertsmannschaft, (select mannschaft_flagge from mannschaft m where m.mannschaft_id = b.auswaertsmannschaft_fid)auswaertsmannschaft_flagge, begegnung_id, begegnung_tore_heimmannschaft, begegnung_tore_auswaertsmannschaft, t.tipp_tore_heimmannschaft, t.tipp_tore_auswaertsmannschaft, g.gruppe_name from begegnung b join gruppe g on b.gruppe_fid = g.gruppe_id left join (select * from tipp where benutzer_fid = ? AND tipprunde_fid = ?) t on b.begegnung_id = t.begegnung_fid';
 		var begegnungen = [];
 		return this.executeQuery(query, [benutzer_id, tipprunde_id]).then(function (result) {
 			if (result.rows.length > 0) {
@@ -189,6 +189,8 @@ myApp.factory('databaseService', function($cordovaSQLite, $q){
 						tipp_tore_heimmannschaft: null,
 						heimmannschaft: null,
 						auswaertsmannschaft: null,
+						heimmannschaft_flagge: null,
+						auswaertsmannschaft_flagge: null,
 						gruppe_name: null
 					};
 					begegnungWithTipp.begegnung_id = result.rows.item(i).begegnung_id;
@@ -198,6 +200,8 @@ myApp.factory('databaseService', function($cordovaSQLite, $q){
 					begegnungWithTipp.tipp_tore_heimmannschaft = result.rows.item(i).tipp_tore_heimmannschaft;
 					begegnungWithTipp.heimmannschaft = result.rows.item(i).heimmannschaft;
 					begegnungWithTipp.auswaertsmannschaft = result.rows.item(i).auswaertsmannschaft;
+					begegnungWithTipp.heimmannschaft_flagge = result.rows.item(i).heimmannschaft_flagge;
+					begegnungWithTipp.auswaertsmannschaft_flagge = result.rows.item(i).auswaertsmannschaft_flagge;
 					begegnungWithTipp.gruppe_name = result.rows.item(i).gruppe_name;
 					begegnungen.push(begegnungWithTipp);
 				};                
