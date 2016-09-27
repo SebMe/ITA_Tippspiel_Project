@@ -5,7 +5,7 @@
   </ion-header-bar>
 
   <ion-scroll overflow-scroll="true" zooming="true" direction="y" style="width: 100%; height: 60%; margin-top:20%">
-		<a ng-repeat="benutzer in tipprundePunkte" class="item item-thumbnail-left" style="margin-left:5%; margin-right:5%; margin-top:%0; border: thick; border-bottom:groove;">
+		<a ng-repeat="benutzer in tipprundePunkte | orderBy:'punkte':true" class="item item-thumbnail-left" style="margin-left:5%; margin-right:5%; margin-top:%0; border: thick; border-bottom:groove;">
 		{{benutzer.benutzer_name}} {{benutzer.punkte}}
 		</a>
 	</ion-scroll>

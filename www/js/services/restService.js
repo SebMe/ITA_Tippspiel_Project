@@ -1,24 +1,31 @@
-myApp.factory('restService', function($http, databaseService, dataService){
+myApp.factory('restService', function($http, databaseService, dataService, $q){
 
 //var serverURL = 'http://192.168.2.102';
 var serverURL = 'http://127.0.0.1';
 
 // This function will retrieve all data from server (for the given table) that the client not yet has, the new data is then inserted in the client db
 var syncTableFunction = function(table){
+	var q = $q.defer();
 	return databaseService.getTableVersions(table).then(function(response){
 		var benutzer = dataService.getBenutzer();
 		var loggedInbenutzer_id = benutzer.benutzer_id;
 		return $http.post(serverURL+'/restController.php', {tablename: table, version: response, benutzer_id: loggedInbenutzer_id}).then(function(response){
 			var newestDBEntryDate = -1;
 			var newestDBEntryAsString = "";
-			for(var i=0;i<response.data.length;i++){
+			var rowCount = response.data.length;
+			for(var i=0;i<rowCount;i++){
 				var oneTableRow = response.data[i];
 				if(new Date(response.data[i]["version"]) > newestDBEntryDate){
 					newestDBEntryDate = new Date(response.data[i]["version"]);
 					newestDBEntryAsString = response.data[i]["version"];
 				};
 				delete oneTableRow["version"];
-				databaseService.insertOrReplaceDataIntoTable(table, oneTableRow);
+				databaseService.insertOrReplaceDataIntoTable(table, oneTableRow).then(function(response){
+					var lastElement = (i == rowCount);
+					if(lastElement){
+						q.resolve();
+					};
+				});
 			};
 			// We received data, store the date of the newest entry as version, so the next sync with server will not receive the data we already have
 			if(newestDBEntryDate > 0){
@@ -26,6 +33,7 @@ var syncTableFunction = function(table){
 			};
 		});
 	});
+	return q;
 };
 this.syncTableWithServer = function(table){
 	return syncTableFunction(table);

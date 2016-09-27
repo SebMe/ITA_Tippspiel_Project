@@ -326,7 +326,10 @@ function($scope, restService, $ionicPopup, databaseService, $state, dataService)
 	};
 	
 	$scope.$on('$ionicView.enter', function () {
-		$scope.selectedGruppe = 'Gruppe A';
+		if($scope.selectedGruppe != null){
+			$scope.selectedGruppe = 'Gruppe A';
+		} ;
+
 		loadBegegnungen();
 	});
 	
@@ -351,6 +354,10 @@ function($scope, restService, $ionicPopup, databaseService, $state, dataService)
 				type: 'button-positive',
 				onTap: function(e) {
 					e.preventDefault();
+					if($scope.newTipp.tipp_tore_auswaertsmannschaft == null || $scope.newTipp.tipp_tore_auswaertsmannschaft < 0 ||
+						$scope.newTipp.tipp_tore_heimmannschaft == null || $scope.newTipp.tipp_tore_heimmannschaft < 0){
+							return;
+						}
 					var loggedInBenutzerID = dataService.getBenutzer().benutzer_id;
 					var selectedTipprunde = dataService.getSelectedTipprunde();
 					var tipp ={
