@@ -4,11 +4,9 @@
     <h1 class="title">Punkte</h1>
   </ion-header-bar>
 
-    <ion-content padding="true" class="has-header">
-
-    <list class="table" ng-repeat="item in ['Pizza Margherita', 'Pizza Tonno']">
-     <p>{{item}}</p>
-    </list>
-
-    </ion-content>
+  <ion-scroll overflow-scroll="true" zooming="true" direction="y" style="width: 100%; height: 60%; margin-top:20%">
+		<a ng-repeat="benutzer in tipprundePunkte" class="item item-thumbnail-left" style="margin-left:5%; margin-right:5%; margin-top:%0; border: thick; border-bottom:groove;">
+		{{benutzer.benutzer_name}} {{benutzer.punkte}}
+		</a>
+	</ion-scroll>
 </ion-view>

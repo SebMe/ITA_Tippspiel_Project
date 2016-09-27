@@ -4,7 +4,7 @@ myApp.factory('restService', function($http, databaseService, dataService){
 var serverURL = 'http://127.0.0.1';
 
 // This function will retrieve all data from server (for the given table) that the client not yet has, the new data is then inserted in the client db
-this.syncTableWithServer = function(table){
+var syncTableFunction = function(table){
 	return databaseService.getTableVersions(table).then(function(response){
 		var benutzer = dataService.getBenutzer();
 		var loggedInbenutzer_id = benutzer.benutzer_id;
@@ -27,6 +27,26 @@ this.syncTableWithServer = function(table){
 		});
 	});
 };
+this.syncTableWithServer = function(table){
+	return syncTableFunction(table);
+}
+
+this.syncAllTables = function(){
+	return syncTableFunction('Benutzer').then(function(response){
+			return syncTableFunction('Zeitzone').then(function(response){
+				return syncTableFunction('Mannschaft').then(function(response){
+					return syncTableFunction('Gruppe').then(function(response){
+						return syncTableFunction('Europameisterschaft').then(function(response){
+							return syncTableFunction('Gruppe_enthaelt_Mannschaft').then(function(response){
+								return syncTableFunction('Europameisterschaft_beinhaltet_Mannschaft').then(function(response){
+									return syncTableFunction('Begegnung').then(function(response){
+										return syncTableFunction('Tipprunde').then(function(response){
+											return syncTableFunction('Benutzer_spielt_Tipprunde').then(function(response){
+												return syncTableFunction('Tipp').then(function(response){
+													console.log("Sync done.");
+
+		})})})})})})})})})})});
+}
 
 // User will be created at the server, if successfull the user is also created in the app db
 this.createUser = function(userdata){

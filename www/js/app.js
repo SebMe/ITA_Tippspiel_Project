@@ -58,23 +58,8 @@ var myApp = angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'ap
 		$cordovaSQLite.execute(db, "INSERT OR IGNORE INTO table_versions (tablename, version) VALUES ('Tipprunde', 0)");
 		$cordovaSQLite.execute(db, "INSERT OR IGNORE INTO table_versions (tablename, version) VALUES ('Benutzer_spielt_Tipprunde', 0)");
 		$cordovaSQLite.execute(db, "INSERT OR IGNORE INTO table_versions (tablename, version) VALUES ('Tipp', 0)");
-		
-		
-		restService.syncTableWithServer('Benutzer').then(function(response){
-			restService.syncTableWithServer('Zeitzone').then(function(response){
-				restService.syncTableWithServer('Mannschaft').then(function(response){
-					restService.syncTableWithServer('Gruppe').then(function(response){
-						restService.syncTableWithServer('Europameisterschaft').then(function(response){
-							restService.syncTableWithServer('Gruppe_enthaelt_Mannschaft').then(function(response){
-								restService.syncTableWithServer('Europameisterschaft_beinhaltet_Mannschaft').then(function(response){
-									restService.syncTableWithServer('Begegnung').then(function(response){
-										restService.syncTableWithServer('Tipprunde').then(function(response){
-											restService.syncTableWithServer('Benutzer_spielt_Tipprunde').then(function(response){
-												restService.syncTableWithServer('Tipp').then(function(response){
-													console.log("Sync done.");
-
-		})})})})})})})})})})});
-
+				
+		restService.syncAllTables();
   });
 });
 
