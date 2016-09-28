@@ -1,8 +1,9 @@
 myApp.factory('restService', function($http, databaseService, dataService, $q){
 
-var serverURL = 'http://192.168.2.101';
-//var serverURL = 'http://127.0.0.1';
+//var serverURL = 'http://192.168.2.100';
+var serverURL = 'http://127.0.0.1';
 //var serverURL = 'http://10.143.104.239';
+//var serverURL = 'http://192.168.173.1';
 
 // This function will retrieve all data from server (for the given table) that the client not yet has, the new data is then inserted in the client db
 var syncTableFunction = function(table){
